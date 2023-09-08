@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useReducer } from 'react'
+import { useState } from 'react'
+import Login from './components/Login'
+import Header from './components/Header'
+import CreatePost from './components/CreatePost'
+import Postlist from './components/Postlist'
+import { createContext } from 'react'
+import Gloplreducer from './Gloplreducer'
 
-function App() {
+
+export const Usercontex = createContext()
+export const Postcontex = createContext({
+  posts : []
+})
+const App = () => {
+
+   const [user ,setuser] = useState("")
+   const [posts ,setpost] = useState([])
+
+     const imitiapost   =   useContext(Postcontex)
+
+     const [state,dispach]  = useReducer(Gloplreducer, imitiapost)
+
+  
+
+  if(!user) return <Login setuser={setuser}/>
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Postcontex.Provider value={{state,dispach}}>
+    <Usercontex.Provider value={user}>
+    
+      <Header user ={user}   setuser ={setuser}/>
+    <CreatePost   user ={user}/>
+    <Postlist  posts ={ state.posts}/>
+
+  
+      
+    
+    
+    </Usercontex.Provider>
+    </Postcontex.Provider>
+  )
 }
 
-export default App;
+export default App
